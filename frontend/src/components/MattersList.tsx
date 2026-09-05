@@ -65,14 +65,12 @@ export const MattersList: React.FC<MattersListProps> = ({
       {/* Top Value Banner: India-First Connected System */}
       <div className="bg-gradient-to-br from-slate-900 via-slate-900 to-amber-950 text-white rounded-3xl p-6 sm:p-8 border border-slate-800 shadow-xl relative overflow-hidden">
         <div className="max-w-3xl space-y-3 relative z-10">
-          {/* Welcome Text */}
-          <div className="space-y-4">
-            <div className="flex items-center space-x-3">
-              <span className="flex items-center space-x-2 text-amber-500 font-semibold tracking-wider text-xs uppercase px-2 py-1 rounded bg-amber-500/10 border border-amber-500/20">
-                <Scale className="w-3.5 h-3.5" />
-                <span>{isHi ? 'न्याय सेतु · न्याय का पुल' : 'NyaySetu · The Bridge to Justice'}</span>
-              </span>
-            </div>
+          <div className="flex items-center space-x-3">
+            <span className="flex items-center space-x-2 text-amber-500 font-semibold tracking-wider text-xs uppercase px-2 py-1 rounded bg-amber-500/10 border border-amber-500/20">
+              <Scale className="w-3.5 h-3.5" />
+              <span>{isHi ? 'न्याय सेतु · न्याय का पुल' : 'NyaySetu · The Bridge to Justice'}</span>
+            </span>
+          </div>
 
           <h1 className="text-2xl sm:text-3xl font-bold font-serif text-white tracking-tight">
             {isHi 
