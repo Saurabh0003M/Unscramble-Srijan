@@ -134,10 +134,10 @@ export const Navbar: React.FC<NavbarProps> = ({
               id="global-search-btn"
               onClick={onOpenSearch}
               className="flex items-center space-x-2 bg-slate-800 hover:bg-slate-700/80 text-slate-300 hover:text-white px-3 py-1.5 rounded-lg border border-slate-700 text-xs sm:text-sm transition cursor-pointer shrink-0"
+              aria-label="Search matters, documents, and OCR"
               title="Search across all matters, parties, and OCR documents"
             >
               <Search className="w-4 h-4 text-amber-400" />
-              <span className="hidden lg:inline whitespace-nowrap">{isHi ? 'खोजें (Search)...' : 'Search matters, docs, OCR...'}</span>
               <kbd className="hidden sm:inline bg-slate-900 text-slate-400 px-1.5 py-0.5 rounded text-[10px] border border-slate-700 font-mono">
                 ⌘K
               </kbd>
