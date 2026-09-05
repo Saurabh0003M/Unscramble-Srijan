@@ -9,19 +9,21 @@ load_dotenv(dotenv_path=BASE_DIR / ".env", override=False)
 # App Info
 APP_NAME = "ClauseClear"
 APP_VERSION = "1.0.0"
-HACKATHON_NAME = "Srijan Hackathon - GH Raisoni College of Engineering and Management, Pune"
 
 # LLM Configuration
-LLM_PROVIDER = os.getenv("LLM_PROVIDER", "openai").lower()
+LLM_PROVIDER = os.getenv("LLM_PROVIDER", "gemini").lower()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
 OPENAI_EMBEDDING_MODEL = os.getenv("OPENAI_EMBEDDING_MODEL", "text-embedding-3-small")
 ANTHROPIC_MODEL = os.getenv("ANTHROPIC_MODEL", "claude-3-5-sonnet-20240620")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
 
-# Demo Mode
-DEMO_MODE = os.getenv("DEMO_MODE", "true").lower() in ("true", "1", "yes")
+# Demo Mode - automatically disabled when any API key is present
+_has_any_key = bool(OPENAI_API_KEY or ANTHROPIC_API_KEY or GEMINI_API_KEY)
+DEMO_MODE = os.getenv("DEMO_MODE", "false" if _has_any_key else "true").lower() in ("true", "1", "yes")
 
 # Server Config
 BACKEND_HOST = os.getenv("BACKEND_HOST", "127.0.0.1")

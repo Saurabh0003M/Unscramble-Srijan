@@ -6,8 +6,10 @@ from backend.utils.config import (
     LLM_PROVIDER,
     OPENAI_API_KEY,
     ANTHROPIC_API_KEY,
+    GEMINI_API_KEY,
     OPENAI_MODEL,
     ANTHROPIC_MODEL,
+    GEMINI_MODEL,
     DEMO_MODE
 )
 from backend.models.schemas import (
@@ -31,9 +33,10 @@ from backend.services.mock_data_service import (
 class LLMService:
     def __init__(self):
         self.provider = LLM_PROVIDER.lower()
-        self.demo_mode = DEMO_MODE or (not OPENAI_API_KEY and not ANTHROPIC_API_KEY)
+        self.demo_mode = DEMO_MODE or (not OPENAI_API_KEY and not ANTHROPIC_API_KEY and not GEMINI_API_KEY)
         self._openai_client = None
         self._anthropic_client = None
+        self._gemini_client = None
 
     def _get_openai_client(self):
         if self._openai_client is None and OPENAI_API_KEY:
@@ -47,6 +50,12 @@ class LLMService:
             self._anthropic_client = Anthropic(api_key=ANTHROPIC_API_KEY)
         return self._anthropic_client
 
+    def _get_gemini_client(self):
+        if self._gemini_client is None and GEMINI_API_KEY:
+            from google import genai
+            self._gemini_client = genai.Client(api_key=GEMINI_API_KEY)
+        return self._gemini_client
+
     def _clean_json_string(self, text: str) -> str:
         """Removes markdown code fences and whitespace from JSON response."""
         text = text.strip()
@@ -57,7 +66,20 @@ class LLMService:
 
     def _call_llm(self, system_prompt: str, user_prompt: str) -> str:
         """Calls the configured LLM provider and returns raw text."""
-        if self.provider == "anthropic" and ANTHROPIC_API_KEY:
+        if self.provider == "gemini" and GEMINI_API_KEY:
+            client = self._get_gemini_client()
+            if not client:
+                raise RuntimeError("No active Gemini client configured.")
+            response = client.models.generate_content(
+                model=GEMINI_MODEL,
+                contents=f"{system_prompt}\n\n{user_prompt}",
+                config={
+                    "temperature": 0.2,
+                    "response_mime_type": "application/json",
+                }
+            )
+            return response.text
+        elif self.provider == "anthropic" and ANTHROPIC_API_KEY:
             client = self._get_anthropic_client()
             response = client.messages.create(
                 model=ANTHROPIC_MODEL,
@@ -86,7 +108,7 @@ class LLMService:
         """
         Segments raw contract text into structured clauses.
         """
-        if self.demo_mode or (not OPENAI_API_KEY and not ANTHROPIC_API_KEY):
+        if self.demo_mode or (not OPENAI_API_KEY and not ANTHROPIC_API_KEY and not GEMINI_API_KEY):
             # Check for sample contract matches
             fn_lower = filename.lower()
             if "rental" in fn_lower or "rent" in fn_lower:
@@ -151,7 +173,7 @@ Return JSON format:
         """
         Analyzes each segmented clause for risk level, plain-English explanation, and negotiation suggestions.
         """
-        if self.demo_mode or (not OPENAI_API_KEY and not ANTHROPIC_API_KEY):
+        if self.demo_mode or (not OPENAI_API_KEY and not ANTHROPIC_API_KEY and not GEMINI_API_KEY):
             if contract_type in ["rental", "employment", "freelance"]:
                 return get_prebuilt_analysis(contract_type)["analysis"]
             return generate_rule_based_analysis(clauses)
@@ -234,7 +256,7 @@ Return valid JSON:
         """
         Answers a user question strictly grounded on the retrieved clauses.
         """
-        if self.demo_mode or (not OPENAI_API_KEY and not ANTHROPIC_API_KEY):
+        if self.demo_mode or (not OPENAI_API_KEY and not ANTHROPIC_API_KEY and not GEMINI_API_KEY):
             return get_grounded_mock_answer(question, retrieved_clauses)
 
         system_prompt = """You are ClauseClear's contract-grounded legal assistant.
