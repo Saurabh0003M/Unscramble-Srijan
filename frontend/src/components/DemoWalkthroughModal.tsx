@@ -154,6 +154,17 @@ export const DemoWalkthroughModal: React.FC<DemoWalkthroughModalProps> = ({
       ],
       actionLabel: isHi ? 'केस टाइमलाइन देखें' : 'View Full Case Timeline',
       actionCode: 7
+    },
+    {
+      step: 8,
+      title: isHi ? '8. एआई वॉइस इंटेक और केस ब्रीफिंग' : '8. AI Voice Intake & Case Briefing',
+      subtitle: isHi ? 'कॉल से सत्यापन योग्य केस ब्रीफ तक' : 'From citizen call to reviewable legal brief',
+      icon: Sparkles,
+      color: 'from-blue-600 to-indigo-700',
+      description: isHi ? 'नागरिक कॉल डेमो, प्राथमिकता स्कोरिंग, मानव सत्यापन और अधिवक्ता मिलान एक ही पारदर्शी कार्यप्रवाह में उपलब्ध हैं।' : 'Simulate a citizen call, review AI-extracted facts and contradictions, then route the brief to a matched advocate — with a human reviewer in control.',
+      highlights: [isHi ? 'डेमो कॉल — वास्तविक कॉल नहीं' : 'Transparent demo call flow — no real call placed', isHi ? 'तथ्य और प्रमाण मानव समीक्षा के लिए' : 'Facts, evidence and contradictions remain reviewer-verifiable', isHi ? 'अधिवक्ता मिलान और केस रूपांतरण' : 'Advocate matching and one-click matter conversion'],
+      actionLabel: isHi ? 'वॉइस इंटेक खोलें' : 'Open Voice Intake',
+      actionCode: 8
     }
   ];
 
@@ -175,7 +186,7 @@ export const DemoWalkthroughModal: React.FC<DemoWalkthroughModalProps> = ({
                   {isHi ? 'न्याय सेतु · मूल्यांकन एवं डेमो गाइड' : 'NyaySetu · Hackathon Judge Walkthrough'}
                 </span>
                 <span className="text-xs bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded font-mono">
-                  Step {activeStep} of 7
+                  Step {activeStep} of {STEPS.length}
                 </span>
               </div>
               <p className="text-xs text-slate-400">

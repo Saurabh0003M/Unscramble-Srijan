@@ -7,12 +7,13 @@ import {
   Sparkles, 
   ExternalLink,
   ShieldCheck
+  ,PhoneCall
 } from 'lucide-react';
 import { AppLanguage, UserRole } from '../types';
 
 interface NavbarProps {
-  currentView: 'matters' | 'matter-detail' | 'calendar' | 'contacts' | 'client-portal' | 'contract-analysis';
-  setCurrentView: (view: 'matters' | 'matter-detail' | 'calendar' | 'contacts' | 'client-portal' | 'contract-analysis') => void;
+  currentView: 'matters' | 'matter-detail' | 'calendar' | 'contacts' | 'client-portal' | 'contract-analysis' | 'voice-intake';
+  setCurrentView: (view: 'matters' | 'matter-detail' | 'calendar' | 'contacts' | 'client-portal' | 'contract-analysis' | 'voice-intake') => void;
   lang: AppLanguage;
   setLang: (lang: AppLanguage) => void;
   userRole: UserRole;
@@ -98,6 +99,16 @@ export const Navbar: React.FC<NavbarProps> = ({
                 }`}
               >
                 {isHi ? 'अनुबंध विश्लेषण' : 'Contract Intelligence'}
+              </button>
+              <button
+                id="nav-voice-intake-btn"
+                onClick={() => setCurrentView('voice-intake')}
+                className={`px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap transition cursor-pointer flex items-center gap-1.5 ${
+                  currentView === 'voice-intake' ? 'bg-amber-500/10 text-amber-400 border-b-2 border-amber-500 rounded-b-none' : 'text-slate-300 hover:text-white hover:bg-slate-800'
+                }`}
+              >
+                <PhoneCall className="w-4 h-4" />
+                {isHi ? 'एआई कॉल डेमो' : 'AI Call Intake'}
               </button>
               <button
                 id="nav-contacts-btn"
