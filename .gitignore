@@ -1,0 +1,5 @@
+
+# Secrets
+.env
+contract-ai/.env
+caseflow-ai/.env
