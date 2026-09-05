@@ -2,12 +2,8 @@ import React from 'react';
 import { 
   Scale, 
   Search, 
-  Globe2, 
   UserCheck, 
-  Sparkles, 
-  ExternalLink,
-  ShieldCheck
-  ,PhoneCall
+  PhoneCall
 } from 'lucide-react';
 import { AppLanguage, UserRole } from '../types';
 
@@ -15,7 +11,6 @@ interface NavbarProps {
   currentView: 'matters' | 'matter-detail' | 'calendar' | 'contacts' | 'client-portal' | 'contract-analysis' | 'voice-intake';
   setCurrentView: (view: 'matters' | 'matter-detail' | 'calendar' | 'contacts' | 'client-portal' | 'contract-analysis' | 'voice-intake') => void;
   lang: AppLanguage;
-  setLang: (lang: AppLanguage) => void;
   userRole: UserRole;
   setUserRole: (role: UserRole) => void;
   onOpenSearch: () => void;
@@ -28,7 +23,6 @@ export const Navbar: React.FC<NavbarProps> = ({
   currentView,
   setCurrentView,
   lang,
-  setLang,
   userRole,
   setUserRole,
   onOpenSearch,
@@ -148,32 +142,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                 ⌘K
               </kbd>
             </button>
-
-            {/* Language Switcher */}
-            <div className="flex items-center bg-slate-800 rounded-lg p-0.5 border border-slate-700">
-              <button
-                onClick={() => setLang('en')}
-                className={`px-2 py-1 rounded text-xs font-medium transition cursor-pointer ${
-                  lang === 'en'
-                    ? 'bg-amber-500 text-slate-950 font-bold'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-                title="Switch to English"
-              >
-                EN
-              </button>
-              <button
-                onClick={() => setLang('hi')}
-                className={`px-2 py-1 rounded text-xs font-medium transition cursor-pointer ${
-                  lang === 'hi'
-                    ? 'bg-amber-500 text-slate-950 font-bold'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-                title="हिंदी में बदलें"
-              >
-                हिन्दी
-              </button>
-            </div>
 
             {/* Role Switcher (Advocate / Paralegal / Client) */}
             <div className="hidden sm:flex items-center space-x-2 border-l border-slate-800 pl-3 shrink-0">

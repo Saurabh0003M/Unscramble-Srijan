@@ -32,7 +32,7 @@ import { ContractAnalysisView } from './components/ContractAnalysisView';
 import { VoiceIntakeHub } from './components/voice/VoiceIntakeHub';
 import { initialVoiceAppData } from './data/mockVoiceData';
 import type { Advocate, ApplicationStatus, IntakeCaseData } from './types/voiceIntake';
-import { Scale, Sparkles, Heart } from 'lucide-react';
+import { Globe2, Scale } from 'lucide-react';
 
 export default function App() {
   // Global Data Repositories
@@ -225,12 +225,37 @@ export default function App() {
         userRole={userRole}
         setUserRole={handleRoleChange}
         lang={lang}
-        setLang={setLang}
         onOpenNewMatter={() => setIsNewMatterOpen(true)}
         onOpenSearch={() => setIsSearchOpen(true)}
         onOpenDemoWalkthrough={() => setIsDemoWalkthroughOpen(true)}
         onOpenECourtsLookup={() => setIsECourtsLookupOpen(true)}
       />
+
+      <div
+        className="fixed bottom-5 right-5 z-30 flex items-center gap-1 rounded-xl border border-slate-200 bg-white/95 p-1 shadow-lg shadow-slate-900/15 backdrop-blur"
+        role="group"
+        aria-label="Language selection"
+      >
+        <Globe2 className="ml-2 h-4 w-4 text-amber-600" aria-hidden="true" />
+        <button
+          onClick={() => setLang('en')}
+          aria-pressed={lang === 'en'}
+          className={`rounded-lg px-2.5 py-1.5 text-xs font-semibold transition cursor-pointer ${
+            lang === 'en' ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100'
+          }`}
+        >
+          EN
+        </button>
+        <button
+          onClick={() => setLang('hi')}
+          aria-pressed={lang === 'hi'}
+          className={`rounded-lg px-2.5 py-1.5 text-xs font-semibold transition cursor-pointer ${
+            lang === 'hi' ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100'
+          }`}
+        >
+          हिन्दी
+        </button>
+      </div>
 
       {/* Main Workspace Canvas */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6">
