@@ -198,7 +198,7 @@ export const MattersList: React.FC<MattersListProps> = ({
 
         {/* Status Pills */}
         <div className="flex items-center space-x-1.5 overflow-x-auto no-scrollbar pt-1">
-          {['ALL', 'Intake', 'Active', 'Awaiting Hearing', 'Reserved', 'Disposed'].map(st => (
+          {['ALL', 'Intake', 'Active', 'Awaiting Hearing'].map(st => (
             <button
               key={st}
               onClick={() => setSelectedStatus(st)}

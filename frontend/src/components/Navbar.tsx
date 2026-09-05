@@ -40,13 +40,13 @@ export const Navbar: React.FC<NavbarProps> = ({
   return (
     <header className="sticky top-0 z-40 bg-slate-900 text-white border-b border-slate-800 shadow-md">
       {/* Top micro banner for Hackathon identification */}
-      <div className="bg-gradient-to-r from-amber-700 via-amber-600 to-amber-800 text-amber-100 text-xs px-4 py-1 flex items-center justify-between">
-        <div className="flex items-center space-x-2">
-          <span className="bg-amber-950/60 font-semibold px-2 py-0.5 rounded text-[11px] uppercase tracking-wider text-amber-200">
+      <div className="bg-gradient-to-r from-amber-700 via-amber-600 to-amber-800 text-amber-100 text-xs px-4 py-1 flex items-center justify-between overflow-hidden">
+        <div className="flex items-center space-x-2 truncate pr-2">
+          <span className="bg-amber-950/60 font-semibold px-2 py-0.5 rounded text-[11px] uppercase tracking-wider text-amber-200 shrink-0">
             Srijan Hackathon
           </span>
-          <span className="hidden sm:inline">LegalTech Domain · India-First Litigation Workflow & Case Management Platform</span>
-          <span className="sm:hidden font-medium">NyaySetu (न्याय सेतु)</span>
+          <span className="hidden lg:inline truncate">LegalTech Domain - India-First Litigation Workflow & Case Management Platform</span>
+          <span className="lg:hidden font-medium shrink-0">NyaySetu</span>
         </div>
         <button
           onClick={onOpenDemoWalkthrough}
