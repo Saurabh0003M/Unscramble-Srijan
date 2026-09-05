@@ -327,7 +327,7 @@ export default function App() {
           </div>
 
           <div className="text-right text-[11px] text-slate-500">
-            Engineered for Srijan Hackathon · Built with craftsmanship
+            India-First LegalTech Solution · Built with craftsmanship
           </div>
         </div>
       </footer>

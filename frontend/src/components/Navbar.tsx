@@ -39,45 +39,27 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <header className="sticky top-0 z-40 bg-slate-900 text-white border-b border-slate-800 shadow-md">
-      {/* Top micro banner for Hackathon identification */}
-      <div className="bg-gradient-to-r from-amber-700 via-amber-600 to-amber-800 text-amber-100 text-xs px-4 py-1 flex items-center justify-between overflow-hidden">
-        <div className="flex items-center space-x-2 truncate pr-2">
-          <span className="bg-amber-950/60 font-semibold px-2 py-0.5 rounded text-[11px] uppercase tracking-wider text-amber-200 shrink-0">
-            Srijan Hackathon
-          </span>
-          <span className="hidden lg:inline truncate">LegalTech Domain - India-First Litigation Workflow & Case Management Platform</span>
-          <span className="lg:hidden font-medium shrink-0">NyaySetu</span>
-        </div>
-        <button
-          onClick={onOpenDemoWalkthrough}
-          className="flex items-center space-x-1 font-semibold text-white bg-amber-900/60 hover:bg-amber-950 px-2.5 py-0.5 rounded border border-amber-400/40 transition text-xs shadow-sm cursor-pointer"
-        >
-          <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
-          <span>{isHi ? 'प्रतियोगिता डेमो गाइड' : 'Hackathon Demo Walkthrough'}</span>
-        </button>
-      </div>
-
       {/* Main Navigation Bar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           
           {/* Brand Logo & Name */}
-          <div className="flex items-center space-x-3 cursor-pointer" onClick={() => setCurrentView('matters')}>
+          <div className="flex items-center space-x-3 cursor-pointer shrink-0" onClick={() => setCurrentView('matters')}>
             <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center shadow-lg shadow-amber-900/30 border border-amber-400/30">
               <Scale className="w-6 h-6 text-slate-950" />
             </div>
-            <div>
-              <div className="flex items-center space-x-2">
-                <span className="text-xl font-bold tracking-tight text-white font-serif">
-                  NyaySetu
-                </span>
-                <span className="text-sm font-medium px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 font-serif">
+            <div className="flex flex-col justify-center">
+              <span className="text-xl font-bold tracking-tight text-white font-serif leading-none">
+                NyaySetu
+              </span>
+              <div className="flex items-center space-x-2 mt-1.5">
+                <span className="text-[13px] font-medium text-amber-400 font-serif leading-none">
                   न्याय सेतु
                 </span>
+                <span className="text-[10px] text-slate-500 font-normal hidden lg:block leading-none border-l border-slate-700 pl-2">
+                  {isHi ? 'एकीकृत मुकदमेबाजी प्रणाली' : 'Unified Litigation Platform'}
+                </span>
               </div>
-              <p className="text-[11px] text-slate-400 font-normal hidden xl:block">
-                {isHi ? 'एकीकृत मुकदमेबाजी कार्यप्रवाह और केस प्रणाली' : 'Unified Litigation Workflow & Case System'}
-              </p>
             </div>
           </div>
 

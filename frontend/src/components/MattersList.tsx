@@ -65,15 +65,14 @@ export const MattersList: React.FC<MattersListProps> = ({
       {/* Top Value Banner: India-First Connected System */}
       <div className="bg-gradient-to-br from-slate-900 via-slate-900 to-amber-950 text-white rounded-3xl p-6 sm:p-8 border border-slate-800 shadow-xl relative overflow-hidden">
         <div className="max-w-3xl space-y-3 relative z-10">
-          <div className="flex items-center space-x-2">
-            <span className="bg-amber-500/20 text-amber-300 border border-amber-500/30 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider flex items-center space-x-1.5 font-mono">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              <span>{isHi ? 'न्याय सेतु · द ब्रिज टू जस्टिस' : 'NyaySetu · The Bridge to Justice'}</span>
-            </span>
-            <span className="text-xs text-slate-400 hidden sm:inline">
-              Srijan Hackathon · LegalTech
-            </span>
-          </div>
+          {/* Welcome Text */}
+          <div className="space-y-4">
+            <div className="flex items-center space-x-3">
+              <span className="flex items-center space-x-2 text-amber-500 font-semibold tracking-wider text-xs uppercase px-2 py-1 rounded bg-amber-500/10 border border-amber-500/20">
+                <Scale className="w-3.5 h-3.5" />
+                <span>{isHi ? 'न्याय सेतु · न्याय का पुल' : 'NyaySetu · The Bridge to Justice'}</span>
+              </span>
+            </div>
 
           <h1 className="text-2xl sm:text-3xl font-bold font-serif text-white tracking-tight">
             {isHi 
@@ -94,14 +93,6 @@ export const MattersList: React.FC<MattersListProps> = ({
             >
               <Plus className="w-4 h-4" />
               <span>{isHi ? 'नया केस जोड़ें' : 'New Legal Matter'}</span>
-            </button>
-
-            <button
-              onClick={onOpenDemoWalkthrough}
-              className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center space-x-1.5 cursor-pointer"
-            >
-              <Sparkles className="w-4 h-4 text-amber-400" />
-              <span>{isHi ? 'प्रतियोगिता वॉकथ्रू गाइड' : 'Hackathon 7-Step Guide'}</span>
             </button>
 
             <button
