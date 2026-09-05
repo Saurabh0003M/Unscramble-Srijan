@@ -2,6 +2,10 @@
 
 A highly advanced, multi-service LegalTech platform built for the hackathon.
 
+## Live Demo
+
+[Open NyaySetu on Vercel](https://unscramble-srijan-portal.vercel.app/)
+
 ## Architecture
 
 - **`frontend/`**: The modern Case Portal UI.
