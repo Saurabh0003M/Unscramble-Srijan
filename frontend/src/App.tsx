@@ -28,6 +28,7 @@ import { NewMatterModal } from './components/NewMatterModal';
 import { GlobalSearchModal } from './components/GlobalSearchModal';
 import { DemoWalkthroughModal } from './components/DemoWalkthroughModal';
 import { ECourtsLookupModal } from './components/ECourtsLookupModal';
+import { ContractAnalysisView } from './components/ContractAnalysisView';
 import { Scale, Sparkles, Heart } from 'lucide-react';
 
 export default function App() {
@@ -40,7 +41,7 @@ export default function App() {
   const [communications, setCommunications] = useState<CommunicationLog[]>(INITIAL_COMMS);
 
   // App Navigation & Context
-  const [currentView, setCurrentView] = useState<'matters' | 'matter-detail' | 'calendar' | 'contacts' | 'client-portal'>('matters');
+  const [currentView, setCurrentView] = useState<'matters' | 'matter-detail' | 'calendar' | 'contacts' | 'client-portal' | 'contract-analysis'>('matters');
   const [selectedMatterId, setSelectedMatterId] = useState<string>('matter-1'); // Default to Meera Sharma case
   const [matterActiveTab, setMatterActiveTab] = useState<string>('overview');
   const [userRole, setUserRole] = useState<UserRole>('Advocate');
@@ -262,6 +263,10 @@ export default function App() {
             onAddTimelineEvent={handleAddTimelineEvent}
             onSwitchToAdvocate={() => handleRoleChange('Advocate')}
           />
+        )}
+
+        {currentView === 'contract-analysis' && (
+          <ContractAnalysisView />
         )}
       </main>
 

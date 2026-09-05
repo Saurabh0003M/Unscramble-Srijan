@@ -11,8 +11,8 @@ import {
 import { AppLanguage, UserRole } from '../types';
 
 interface NavbarProps {
-  currentView: 'matters' | 'matter-detail' | 'calendar' | 'contacts' | 'client-portal';
-  setCurrentView: (view: 'matters' | 'matter-detail' | 'calendar' | 'contacts' | 'client-portal') => void;
+  currentView: 'matters' | 'matter-detail' | 'calendar' | 'contacts' | 'client-portal' | 'contract-analysis';
+  setCurrentView: (view: 'matters' | 'matter-detail' | 'calendar' | 'contacts' | 'client-portal' | 'contract-analysis') => void;
   lang: AppLanguage;
   setLang: (lang: AppLanguage) => void;
   userRole: UserRole;
@@ -105,6 +105,17 @@ export const Navbar: React.FC<NavbarProps> = ({
                 }`}
               >
                 {isHi ? 'कोर्ट कैलेंडर व तारीखें' : 'Court Calendar'}
+              </button>
+              <button
+                id="nav-contract-ai-btn"
+                onClick={() => setCurrentView('contract-analysis')}
+                className={`px-3.5 py-2 rounded-md text-sm font-medium transition cursor-pointer ${
+                  currentView === 'contract-analysis'
+                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                    : 'text-slate-300 hover:text-white hover:bg-slate-800'
+                }`}
+              >
+                {isHi ? '     1  ? -؅ ,   ? _ _ _?  ' : 'Contract Intelligence'}
               </button>
               <button
                 id="nav-contacts-btn"
