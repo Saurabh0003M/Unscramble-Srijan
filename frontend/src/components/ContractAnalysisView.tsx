@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
-import { Upload, FileText, AlertTriangle, ShieldCheck, Scale, FileWarning, ArrowRight, Loader2, CheckCircle2 } from 'lucide-react';
+import { Upload, FileText, AlertTriangle, Scale, FileWarning, ArrowRight, Loader2, CheckCircle2 } from 'lucide-react';
+import { GoogleGenAI } from '@google/genai';
 
-interface ClauseItem {
-  id: string;
-  number?: string;
-  title: string;
-  category: string;
-}
+const GEMINI_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
 
 interface ClauseAnalysisItem {
   clause_id: string;
+  title: string;
+  category: string;
   plain_english: string;
   risk_level: 'GREEN' | 'YELLOW' | 'RED';
   risk_reason: string;
@@ -18,81 +16,120 @@ interface ClauseAnalysisItem {
   recommended_user_action: string;
 }
 
-interface ContractAnalysisResponse {
-  session_id: string;
-  filename: string;
-  file_type: string;
+interface AnalysisResult {
   contract_type: string;
-  fairness: {
-    score: number;
-    grade: string;
-    verdict: string;
-  };
-  clauses: ClauseItem[];
-  analysis: ClauseAnalysisItem[];
-  missing_protections: any[];
+  fairness: { score: number; grade: string; verdict: string };
   executive_summary: string;
+  analysis: ClauseAnalysisItem[];
+}
+
+function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      resolve(result.split(',')[1]); // strip data:...;base64, prefix
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+async function analyzeWithGemini(file: File): Promise<AnalysisResult> {
+  const ai = new GoogleGenAI({ apiKey: GEMINI_KEY });
+  const base64Data = await fileToBase64(file);
+
+  const systemPrompt = `You are ClauseClear, an expert AI legal contract analyzer built for the Indian legal system.
+
+Analyze the uploaded contract document thoroughly. Return a single valid JSON object with this exact structure:
+{
+  "contract_type": "rental|employment|freelance|service|generic",
+  "fairness": {
+    "score": <number 0-100>,
+    "grade": "A|B|C|D|F",
+    "verdict": "<one sentence fairness verdict>"
+  },
+  "executive_summary": "<2-3 paragraph summary of the entire contract in plain English>",
+  "analysis": [
+    {
+      "clause_id": "clause_1",
+      "title": "<clause title>",
+      "category": "<payment|termination|notice|confidentiality|liability|indemnity|dispute_resolution|deposit|intellectual_property|non_compete|working_hours|leave|renewal|rent|maintenance|penalties|obligations|miscellaneous>",
+      "plain_english": "<8th-grade reading level explanation of what this clause means practically>",
+      "risk_level": "GREEN|YELLOW|RED",
+      "risk_reason": "<why this risk level was assigned>",
+      "key_concern": "<the biggest practical hazard for the signing party>",
+      "suggested_alternative": "<for RED/YELLOW clauses, provide balanced alternative wording. null for GREEN>",
+      "recommended_user_action": "<concrete action the user should take>"
+    }
+  ]
+}
+
+Rules:
+- GREEN = standard/balanced/safe clause
+- YELLOW = caution/ambiguous/one-sided/needs attention  
+- RED = high risk/harmful/punitive/financially dangerous
+- Analyze EVERY clause in the document
+- Be objective and educational
+- Do not invent laws
+- Return ONLY valid JSON, no markdown`;
+
+  const response = await ai.models.generateContent({
+    model: 'gemini-2.0-flash',
+    contents: [{
+      role: 'user',
+      parts: [
+        { text: systemPrompt },
+        { inlineData: { mimeType: file.type || 'application/pdf', data: base64Data } }
+      ]
+    }],
+    config: {
+      temperature: 0.2,
+      responseMimeType: 'application/json',
+    }
+  });
+
+  const text = response.text || '';
+  return JSON.parse(text);
 }
 
 export function ContractAnalysisView() {
   const [file, setFile] = useState<File | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [result, setResult] = useState<ContractAnalysisResponse | null>(null);
+  const [result, setResult] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setFile(e.target.files[0]);
+      setResult(null);
+      setError(null);
     }
   };
 
   const handleProcess = async () => {
     if (!file) return;
     try {
-      setIsUploading(true);
-      setError(null);
-      
-      const formData = new FormData();
-      formData.append('file', file);
-      
-      const uploadRes = await fetch('/api/contract/upload', {
-        method: 'POST',
-        body: formData,
-      });
-      
-      if (!uploadRes.ok) throw new Error("Failed to upload document");
-      const uploadData = await uploadRes.json();
-      
-      setIsUploading(false);
       setIsAnalyzing(true);
-      
-      const analyzeRes = await fetch('/api/contract/analyze', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ session_id: uploadData.session_id })
-      });
-      
-      if (!analyzeRes.ok) throw new Error("Analysis failed");
-      const analyzeData = await analyzeRes.json();
-      
-      setResult(analyzeData);
+      setError(null);
+      const data = await analyzeWithGemini(file);
+      setResult(data);
     } catch (err: any) {
-      setError(err.message);
+      console.error('Analysis error:', err);
+      setError(err.message || 'Analysis failed. Please try again.');
     } finally {
-      setIsUploading(false);
       setIsAnalyzing(false);
     }
   };
 
   return (
-    <div className="flex-1 w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-in fade-in duration-500">
+    <div className="flex-1 w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
         <h1 className="text-3xl font-serif font-bold text-slate-900 flex items-center gap-3">
           <Scale className="w-8 h-8 text-amber-600" />
           AI Contract Intelligence
         </h1>
-        <p className="mt-2 text-slate-600">Deep semantic parsing, risk badges, and fairness evaluation.</p>
+        <p className="mt-2 text-slate-600">Deep semantic parsing, risk badges, and fairness evaluation powered by Google Gemini AI.</p>
       </div>
 
       {!result && (
@@ -103,7 +140,7 @@ export function ContractAnalysisView() {
             </div>
           </div>
           <h3 className="text-lg font-semibold text-slate-900 mb-2">Upload Contract Document</h3>
-          <p className="text-sm text-slate-500 mb-6">Upload a PDF or Word document for instant legal analysis.</p>
+          <p className="text-sm text-slate-500 mb-6">Upload a PDF, Word, or text document for instant AI-powered legal analysis.</p>
           
           <input 
             type="file" 
@@ -123,13 +160,13 @@ export function ContractAnalysisView() {
             <div className="mt-4">
               <button 
                 onClick={handleProcess}
-                disabled={isUploading || isAnalyzing}
+                disabled={isAnalyzing}
                 className="inline-flex items-center justify-center px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg font-medium transition-colors w-full disabled:opacity-50"
               >
-                {(isUploading || isAnalyzing) ? (
-                  <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> {isUploading ? 'Uploading...' : 'Analyzing...'}</>
+                {isAnalyzing ? (
+                  <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> Analyzing with Gemini AI...</>
                 ) : (
-                  <><Sparkles className="w-5 h-5 mr-2" /> Start Analysis</>
+                  <><SparklesIcon className="w-5 h-5 mr-2" /> Start AI Analysis</>
                 )}
               </button>
             </div>
@@ -153,7 +190,7 @@ export function ContractAnalysisView() {
                 <FileText className="w-5 h-5 text-indigo-600" />
                 Executive Summary
               </h3>
-              <p className="text-slate-700 leading-relaxed text-sm">
+              <p className="text-slate-700 leading-relaxed text-sm whitespace-pre-line">
                 {result.executive_summary}
               </p>
             </div>
@@ -175,11 +212,8 @@ export function ContractAnalysisView() {
           <h3 className="text-xl font-bold text-slate-900 mt-8 mb-4">Clause-by-Clause Risk Analysis</h3>
           <div className="grid grid-cols-1 gap-4">
             {result.analysis.map((item, idx) => {
-              const clause = result.clauses.find(c => c.id === item.clause_id);
-              
               const isRed = item.risk_level === 'RED';
               const isYellow = item.risk_level === 'YELLOW';
-              const isGreen = item.risk_level === 'GREEN';
               
               return (
                 <div key={idx} className={`bg-white rounded-xl shadow-sm border p-6 flex flex-col md:flex-row gap-6 ${
@@ -197,8 +231,8 @@ export function ContractAnalysisView() {
                         {item.risk_level}
                       </span>
                     </div>
-                    <h4 className="font-semibold text-slate-900 text-sm mb-1">{clause?.title || item.clause_id}</h4>
-                    <span className="text-xs text-slate-500 capitalize">{clause?.category.replace('_', ' ')}</span>
+                    <h4 className="font-semibold text-slate-900 text-sm mb-1">{item.title}</h4>
+                    <span className="text-xs text-slate-500 capitalize">{item.category?.replace('_', ' ')}</span>
                   </div>
                   
                   <div className="md:w-3/4">
@@ -228,7 +262,7 @@ export function ContractAnalysisView() {
           
           <div className="mt-8 flex justify-center">
             <button 
-              onClick={() => setResult(null)}
+              onClick={() => { setResult(null); setFile(null); }}
               className="text-slate-500 hover:text-slate-800 text-sm font-medium underline"
             >
               Analyze Another Document
@@ -240,7 +274,7 @@ export function ContractAnalysisView() {
   );
 }
 
-const Sparkles = ({ className }: { className?: string }) => (
+const SparklesIcon = ({ className }: { className?: string }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
     <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
     <path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/>
