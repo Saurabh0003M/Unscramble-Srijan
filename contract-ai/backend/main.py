@@ -1,7 +1,7 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from backend.utils.config import APP_NAME, APP_VERSION, HACKATHON_NAME
+from backend.utils.config import APP_NAME, APP_VERSION
 from backend.storage.database import init_db
 from backend.api.routes_health import router as health_router
 from backend.api.routes_upload import router as upload_router
@@ -21,7 +21,7 @@ except Exception:
 async def lifespan(app: FastAPI):
     # Startup: Ensure DB tables exist
     init_db()
-    print(f"[STARTUP] {APP_NAME} v{APP_VERSION} Backend Initialized ({HACKATHON_NAME})")
+    print(f"[STARTUP] {APP_NAME} v{APP_VERSION} Backend Initialized")
     yield
     # Shutdown
     print(f"[SHUTDOWN] {APP_NAME} Backend Shutdown Cleanly")
@@ -29,7 +29,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title=APP_NAME,
     version=APP_VERSION,
-    description=f"AI-Powered Legal Tech Contract Analyzer for {HACKATHON_NAME}",
+    description="AI-Powered Legal Tech Contract Analyzer — NyaySetu Platform",
     lifespan=lifespan
 )
 
