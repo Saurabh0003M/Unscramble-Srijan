@@ -116,12 +116,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                 {isHi ? 'पक्षकार और संपर्क (Directory)' : 'Parties & Directory'}
               </button>
               <button
-                id="nav-ecourts-btn"
-                onClick={onOpenECourtsLookup}
-                className="px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap text-emerald-300 hover:bg-emerald-950/50 flex items-center space-x-1.5 transition cursor-pointer"
-              >
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-                <span>eCourts CNR</span>
+              id="nav-ecourts-btn"
+              onClick={onOpenECourtsLookup}
+              className="ml-1 rounded-md border border-emerald-500/15 bg-emerald-950/25 px-3 py-2 text-sm font-medium whitespace-nowrap text-emerald-300 hover:bg-emerald-950/50 flex items-center space-x-1.5 transition cursor-pointer"
+              title="Search eCourts by CNR number"
+            >
+                <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+                <span>eCourts</span>
               </button>
             </nav>
           )}
