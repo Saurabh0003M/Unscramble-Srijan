@@ -75,8 +75,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                   न्याय सेतु
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400 font-normal">
-                {isHi ? 'एकीकृत भारतीय वाद एवं केस प्रबंधन मंच' : 'Unified Litigation Workflow & Case System'}
+              <p className="text-[11px] text-slate-400 font-normal hidden xl:block">
+                {isHi ? 'एकीकृत मुकदमेबाजी कार्यप्रवाह और केस प्रणाली' : 'Unified Litigation Workflow & Case System'}
               </p>
             </div>
           </div>
@@ -87,20 +87,20 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 id="nav-matters-btn"
                 onClick={() => setCurrentView('matters')}
-                className={`px-3.5 py-2 rounded-md text-sm font-medium transition cursor-pointer ${
+                className={`px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap transition cursor-pointer ${
                   currentView === 'matters' || currentView === 'matter-detail'
-                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                    ? 'bg-amber-500/10 text-amber-400 border-b-2 border-amber-500 rounded-b-none'
                     : 'text-slate-300 hover:text-white hover:bg-slate-800'
                 }`}
               >
-                {isHi ? 'केस व वाद (Matters)' : 'Cases & Matters'}
+                {isHi ? 'केस और मामले (Matters)' : 'Cases & Matters'}
               </button>
               <button
                 id="nav-calendar-btn"
                 onClick={() => setCurrentView('calendar')}
-                className={`px-3.5 py-2 rounded-md text-sm font-medium transition cursor-pointer ${
+                className={`px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap transition cursor-pointer ${
                   currentView === 'calendar'
-                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                    ? 'bg-amber-500/10 text-amber-400 border-b-2 border-amber-500 rounded-b-none'
                     : 'text-slate-300 hover:text-white hover:bg-slate-800'
                 }`}
               >
@@ -109,32 +109,32 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 id="nav-contract-ai-btn"
                 onClick={() => setCurrentView('contract-analysis')}
-                className={`px-3.5 py-2 rounded-md text-sm font-medium transition cursor-pointer ${
+                className={`px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap transition cursor-pointer ${
                   currentView === 'contract-analysis'
-                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                    ? 'bg-amber-500/10 text-amber-400 border-b-2 border-amber-500 rounded-b-none'
                     : 'text-slate-300 hover:text-white hover:bg-slate-800'
                 }`}
               >
-                {isHi ? '     1  ? -؅ ,   ? _ _ _?  ' : 'Contract Intelligence'}
+                {isHi ? 'अनुबंध विश्लेषण' : 'Contract Intelligence'}
               </button>
               <button
                 id="nav-contacts-btn"
                 onClick={() => setCurrentView('contacts')}
-                className={`px-3.5 py-2 rounded-md text-sm font-medium transition cursor-pointer ${
+                className={`px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap transition cursor-pointer ${
                   currentView === 'contacts'
-                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                    ? 'bg-amber-500/10 text-amber-400 border-b-2 border-amber-500 rounded-b-none'
                     : 'text-slate-300 hover:text-white hover:bg-slate-800'
                 }`}
               >
-                {isHi ? 'पक्षकार व संपर्क' : 'Parties & Directory'}
+                {isHi ? 'पक्षकार और संपर्क (Directory)' : 'Parties & Directory'}
               </button>
               <button
                 id="nav-ecourts-btn"
                 onClick={onOpenECourtsLookup}
-                className="px-3.5 py-2 rounded-md text-sm font-medium text-emerald-300 hover:bg-emerald-950/50 border border-emerald-500/30 flex items-center space-x-1.5 transition cursor-pointer"
+                className="px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap text-emerald-300 hover:bg-emerald-950/50 flex items-center space-x-1.5 transition cursor-pointer"
               >
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-                <span>eCourts CNR Live</span>
+                <span>eCourts CNR</span>
               </button>
             </nav>
           )}
@@ -146,11 +146,11 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               id="global-search-btn"
               onClick={onOpenSearch}
-              className="flex items-center space-x-2 bg-slate-800 hover:bg-slate-700/80 text-slate-300 hover:text-white px-3 py-1.5 rounded-lg border border-slate-700 text-xs sm:text-sm transition cursor-pointer"
+              className="flex items-center space-x-2 bg-slate-800 hover:bg-slate-700/80 text-slate-300 hover:text-white px-3 py-1.5 rounded-lg border border-slate-700 text-xs sm:text-sm transition cursor-pointer shrink-0"
               title="Search across all matters, parties, and OCR documents"
             >
               <Search className="w-4 h-4 text-amber-400" />
-              <span className="hidden lg:inline">{isHi ? 'केस, दस्तावेज व OCR खोजें...' : 'Search matters, docs, OCR...'}</span>
+              <span className="hidden lg:inline whitespace-nowrap">{isHi ? 'खोजें (Search)...' : 'Search matters, docs, OCR...'}</span>
               <kbd className="hidden sm:inline bg-slate-900 text-slate-400 px-1.5 py-0.5 rounded text-[10px] border border-slate-700 font-mono">
                 ⌘K
               </kbd>
@@ -183,16 +183,16 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
 
             {/* Role Switcher (Advocate / Paralegal / Client) */}
-            <div className="flex items-center space-x-2 border-l border-slate-800 pl-3">
+            <div className="hidden sm:flex items-center space-x-2 border-l border-slate-800 pl-3 shrink-0">
               <div className="relative group">
                 <select
                   value={userRole}
                   onChange={(e) => setUserRole(e.target.value as UserRole)}
                   className="bg-slate-800 text-slate-200 text-xs rounded-lg border border-slate-700 px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-amber-500 cursor-pointer font-medium appearance-none pr-7"
                 >
-                  <option value="ADVOCATE">Adv. Anita Deshmukh (Lead Litigator)</option>
-                  <option value="PARALEGAL">Rahul Verma (Paralegal / Associate)</option>
-                  <option value="CLIENT">Meera Sharma (Client Portal View)</option>
+                  <option value="ADVOCATE">Advocate View</option>
+                  <option value="PARALEGAL">Paralegal View</option>
+                  <option value="CLIENT">Client View</option>
                 </select>
                 <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none text-slate-400">
                   <UserCheck className="w-3.5 h-3.5 text-amber-400" />

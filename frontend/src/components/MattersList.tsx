@@ -93,7 +93,7 @@ export const MattersList: React.FC<MattersListProps> = ({
               className="px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold rounded-xl text-xs sm:text-sm shadow-md transition flex items-center space-x-1.5 cursor-pointer"
             >
               <Plus className="w-4 h-4" />
-              <span>{isHi ? '+ नया केस दर्ज करें' : '+ New Legal Matter'}</span>
+              <span>{isHi ? 'नया केस जोड़ें' : 'New Legal Matter'}</span>
             </button>
 
             <button
