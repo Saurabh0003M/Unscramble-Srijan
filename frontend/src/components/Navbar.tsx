@@ -41,7 +41,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   return (
     <header className="sticky top-0 z-40 bg-slate-900 text-white border-b border-slate-800 shadow-md">
       {/* Main Navigation Bar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           
           {/* Brand Logo & Name */}
@@ -66,7 +66,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Navigation Links */}
           {userRole !== 'CLIENT' && (
-            <nav className="hidden md:flex items-center space-x-1">
+            <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center space-x-1 lg:flex">
               <button
                 id="nav-matters-btn"
                 onClick={() => setCurrentView('matters')}
