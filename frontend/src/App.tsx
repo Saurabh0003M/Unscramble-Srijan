@@ -29,6 +29,9 @@ import { GlobalSearchModal } from './components/GlobalSearchModal';
 import { DemoWalkthroughModal } from './components/DemoWalkthroughModal';
 import { ECourtsLookupModal } from './components/ECourtsLookupModal';
 import { ContractAnalysisView } from './components/ContractAnalysisView';
+import { VoiceIntakeHub } from './components/voice/VoiceIntakeHub';
+import { initialVoiceAppData } from './data/mockVoiceData';
+import type { Advocate, ApplicationStatus, IntakeCaseData } from './types/voiceIntake';
 import { Scale, Sparkles, Heart } from 'lucide-react';
 
 export default function App() {
@@ -41,7 +44,8 @@ export default function App() {
   const [communications, setCommunications] = useState<CommunicationLog[]>(INITIAL_COMMS);
 
   // App Navigation & Context
-  const [currentView, setCurrentView] = useState<'matters' | 'matter-detail' | 'calendar' | 'contacts' | 'client-portal' | 'contract-analysis'>('matters');
+  const [currentView, setCurrentView] = useState<'matters' | 'matter-detail' | 'calendar' | 'contacts' | 'client-portal' | 'contract-analysis' | 'voice-intake'>('matters');
+  const [voiceData, setVoiceData] = useState(initialVoiceAppData);
   const [selectedMatterId, setSelectedMatterId] = useState<string>('matter-1'); // Default to Meera Sharma case
   const [matterActiveTab, setMatterActiveTab] = useState<string>('overview');
   const [userRole, setUserRole] = useState<UserRole>('Advocate');
@@ -183,6 +187,34 @@ export default function App() {
     });
   };
 
+  const handleSelectIntakeCase = (caseId: string) => {
+    const selected = voiceData.allCases.find(item => item.case_id === caseId);
+    if (selected) setVoiceData(previous => ({ ...previous, activeCase: selected }));
+  };
+
+  const handleUpdateIntakeCase = (updated: IntakeCaseData) => setVoiceData(previous => ({
+    ...previous,
+    activeCase: updated,
+    allCases: previous.allCases.map(item => item.case_id === updated.case_id ? updated : item),
+  }));
+
+  const handleApplyAdvocate = (advocateId: string) => setVoiceData(previous => ({
+    ...previous,
+    applications: { ...previous.applications, [advocateId]: previous.applications[advocateId] === 'sent' ? 'viewed' : 'sent' },
+  }));
+
+  const handleConvertIntakeToMatter = () => {
+    const intake = voiceData.activeCase;
+    const created: Matter = {
+      id: `voice-${Date.now()}`, matterNumber: `NS-2026-${Math.floor(100 + Math.random() * 900)}`,
+      title: `${intake.caller_name} — ${intake.matter_type.replace('_', ' ')}`, titleHi: `${intake.caller_name} — नया मामला`,
+      category: 'Consumer Protection', status: 'Active', description: `Converted from AI intake brief ${intake.case_id}.`, court: 'District & Sessions Court, Saket',
+      leadAdvocate: 'To be assigned', paralegalAssigned: 'Intake Desk', openedDate: new Date().toISOString().slice(0, 10),
+      parties: [{ contactId: `voice-contact-${Date.now()}`, contact: { id: `voice-contact-${Date.now()}`, name: intake.caller_name, type: 'Individual', phone: intake.contact_phone, email: 'pending@nyaysetu.demo', address: 'To be verified', city: 'To be verified', state: 'To be verified' }, role: 'Petitioner / Complainant', isPrimaryClient: true }], eCourtsTrackingActive: false,
+    };
+    handleCreateMatter(created);
+  };
+
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900 flex flex-col font-sans selection:bg-amber-200">
       
@@ -268,6 +300,10 @@ export default function App() {
         {currentView === 'contract-analysis' && (
           <ContractAnalysisView />
         )}
+
+        {currentView === 'voice-intake' && (
+          <VoiceIntakeHub cases={voiceData.allCases} activeCase={voiceData.activeCase} advocates={voiceData.advocates} applications={voiceData.applications} onSelectCase={handleSelectIntakeCase} onUpdateCase={handleUpdateIntakeCase} onApply={handleApplyAdvocate} onConvert={handleConvertIntakeToMatter} />
+        )}
       </main>
 
       {/* Modals */}
@@ -295,6 +331,10 @@ export default function App() {
         lang={lang}
         onSelectMatter={handleSelectMatter}
         onSwitchRole={handleRoleChange}
+        onSelectStepAction={(step) => {
+          if (step === 8) setCurrentView('voice-intake');
+          else setCurrentView('matters');
+        }}
       />
 
       <ECourtsLookupModal
